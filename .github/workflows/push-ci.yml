@@ -6,7 +6,7 @@ on:
 
 jobs:
   test:
-    if: github.repository == 'icip-cas/pptagent' || github.repository == 'Force1ess/PPTAgent'
+    if: github.repository == 'zihanfu-code/PPTAgent'
     runs-on: ubuntu-latest
 
     env:

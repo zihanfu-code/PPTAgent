@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pptagent"
 version = "0.1.0"
-authors = [{ name = "Hao Zheng", email = "wszh712811@gmail.com" }]
+authors = [{ name = "zihanfu", email = "zfuao@connect.ust.hk" }]
 description = "PPTAgent, a tool for utilizing LLMs to generate PowerPoint presentations from documents."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -49,7 +49,7 @@ dependencies = [
     "PyPDF2",
     "python-Levenshtein",
     "python-multipart",
-    "python-pptx @ git+https://github.com/Force1ess/python-pptx",
+    "python-pptx @ git+https://github.com/zihanfu-code/python-pptx",
     "rich",
     "socksio",
     "tenacity",
@@ -60,8 +60,8 @@ dependencies = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/icip-cas/PPTAgent"
-"Bug Tracker" = "https://github.com/icip-cas/PPTAgent/issues"
+"Homepage" = "https://github.com/zihanfu-code/PPTAgent"
+"Bug Tracker" = "https://github.com/zihanfu-code/PPTAgent/issues"
 
 [tool.setuptools]
 include-package-data = true

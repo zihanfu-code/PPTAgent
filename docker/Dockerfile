@@ -88,7 +88,7 @@ RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.13 1
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.13 100
 RUN python3.13 -m ensurepip --upgrade && python3.13 -m pip install --upgrade setuptools
 
-RUN git clone https://github.com/icip-cas/PPTAgent
+RUN git clone https://github.com/zihanfu-code/PPTAgent
 RUN pip install /PPTAgent
 
 RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash -

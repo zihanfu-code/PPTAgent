@@ -3,12 +3,12 @@
 This package provides tools to automatically generate presentations from documents,
 following a two-phase approach of Analysis and Generation.
 
-For more information, visit: https://github.com/icip-cas/PPTAgent
+For more information, visit: https://github.com/zihanfu-code/PPTAgent
 """
 
 __version__ = "0.1.0"
-__author__ = "Hao Zheng"
-__email__ = "wszh712811@gmail.com"
+__author__ = "zihanfu"
+__email__ = "zfuao@connect.ust.hk"
 
 
 # Check the version of python and python-pptx
@@ -25,7 +25,7 @@ try:
     assert Version(PPTXVersion) >= Version("1.0.4") and Mark == "PPTAgent"
 except:
     raise ImportError(
-        "You should install the customized `python-pptx` for this project: Force1ess/python-pptx, but got %s."
+        "You should install the customized `python-pptx` for this project: zihanfu-code/python-pptx, but got %s."
         % PPTXVersion
     )
 

@@ -16,16 +16,16 @@
 **安装方法：**
 ```bash
 # 1. 设置代理（如果需要）
-export https_proxy=http://proxy.zhenguanyu.com:8118 http_proxy=http://proxy.zhenguanyu.com:8118 all_proxy=http://proxy.zhenguanyu.com:8118
+export https_proxy=http://your-proxy:port http_proxy=http://your-proxy:port all_proxy=http://your-proxy:port
 
-# 2. 先安装依赖（不使用代理，因为代理对 pip 返回 503）
+# 2. 先安装依赖（不使用代理）
 unset https_proxy http_proxy all_proxy
 pip install XlsxWriter lxml
 
 # 3. 克隆并安装 python-pptx（使用代理，因为 git clone 需要）
-export https_proxy=http://proxy.zhenguanyu.com:8118 http_proxy=http://proxy.zhenguanyu.com:8118 all_proxy=http://proxy.zhenguanyu.com:8118
+export https_proxy=http://your-proxy:port http_proxy=http://your-proxy:port all_proxy=http://your-proxy:port
 cd /tmp
-git clone https://github.com/Force1ess/python-pptx.git
+git clone https://github.com/zihanfu-code/python-pptx.git
 cd python-pptx
 pip install . --no-build-isolation --no-deps
 ```
@@ -65,19 +65,19 @@ python -c "import marker; print('marker 可以导入')"
 
 ### 方法 1：设置 PYTHONPATH（推荐）
 ```bash
-export PYTHONPATH=/mnt/data/guyx/PPTAgent-main:$PYTHONPATH
+export PYTHONPATH=/path/to/PPTAgent:$PYTHONPATH
 ```
 
 ### 方法 2：在 Python 代码中
 ```python
 import sys
-sys.path.insert(0, '/mnt/data/guyx/PPTAgent-main')
+sys.path.insert(0, '/path/to/PPTAgent')
 from pptagent import ...
 ```
 
 ### 方法 3：永久设置（添加到 ~/.bashrc）
 ```bash
-echo 'export PYTHONPATH=/mnt/data/guyx/PPTAgent-main:$PYTHONPATH' >> ~/.bashrc
+echo 'export PYTHONPATH=/path/to/PPTAgent:$PYTHONPATH' >> ~/.bashrc
 source ~/.bashrc
 ```
 
@@ -89,15 +89,15 @@ source ~/.bashrc
 python -c "from pptx import __version__; print('python-pptx:', __version__)"
 
 # 验证 pptagent（需要先设置 PYTHONPATH）
-export PYTHONPATH=/mnt/data/guyx/PPTAgent-main:$PYTHONPATH
+export PYTHONPATH=/path/to/PPTAgent:$PYTHONPATH
 python -c "import pptagent; print('pptagent 导入成功')"
 ```
 
 ## 📌 重要提示
 
 1. **代理配置：** 
-   - Git clone 需要代理：`export https_proxy=http://proxy.zhenguanyu.com:8118 ...`
-   - pip 安装包时代理返回 503，需要临时禁用：`unset https_proxy http_proxy all_proxy`
+   - Git clone 需要代理：`export https_proxy=http://your-proxy:port ...`
+   - pip 安装包时可能返回 503，需要临时禁用：`unset https_proxy http_proxy all_proxy`
 
 2. **不安装包本身：** 
    - 使用 `pip install -r requirements.txt` 只安装依赖

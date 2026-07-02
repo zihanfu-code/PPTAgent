@@ -1,27 +1,9 @@
-
-
-
-
-
-
-
-
 # PPTAgent: Generating and Evaluating Presentations Beyond Text-to-Slides
-<p align="center">
-  📄 <a href="https://arxiv.org/abs/2501.03936" target="_blank">Paper</a> &nbsp; | &nbsp;
-  🤗 <a href="https://huggingface.co/datasets/Forceless/Zenodo10K" target="_blank">Dataset</a> &nbsp; | &nbsp;
-  📝 <a href="./DOC.md" target="_blank">Documentation</a> &nbsp; | &nbsp;
-  🙏 <a href="#citation-" target="_blank">Citation</a>
-</p>
 
-We present PPTAgent, an innovative system that automatically generates presentations from documents. Drawing inspiration from human presentation creation methods, our system employs a two-step process to ensure excellence in overall quality. Additionally, we introduce **PPTEval**, a comprehensive evaluation framework that assesses presentations across multiple dimensions.
+PPTAgent is an innovative system that automatically generates presentations from documents. Drawing inspiration from human presentation creation methods, the system employs a two-step process to ensure excellence in overall quality. Additionally, it includes **PPTEval**, a comprehensive evaluation framework that assesses presentations across multiple dimensions.
 
 > [!TIP]
 > 🚀 Get started quickly with our pre-built Docker image - [See Docker instructions](DOC.md/#docker-)
-
-## Demo Video 🎥
-
-https://github.com/user-attachments/assets/c3935a98-4d2b-4c46-9b36-e7c598d14863
 
 ## Distinctive Features ✨
 
@@ -100,17 +82,89 @@ The workflow of PPTEval is shown below:
 <img src="resource/fig3.jpg" alt="PPTEval Workflow" style="width:70%;"/>
 </p>
 
+## Quick Start 🚀
 
-## Citation 🙏
+### Requirements
 
-If you find this project helpful, please use the following to cite it:
-```bibtex
-@article{zheng2025pptagent,
-  title={PPTAgent: Generating and Evaluating Presentations Beyond Text-to-Slides},
-  author={Zheng, Hao and Guan, Xinyan and Kong, Hao and Zheng, Jia and Zhou, Weixiang and Lin, Hongyu and Lu, Yaojie and He, Ben and Han, Xianpei and Sun, Le},
-  journal={arXiv preprint arXiv:2501.03936},
-  year={2025}
-}
+- Python 3.11+
+- LibreOffice, Chrome, poppler-utils, NodeJS
+- 8GB+ RAM (GPU recommended for faster processing)
+
+### Installation
+
+```bash
+pip install git+https://github.com/zihanfu-code/PPTAgent.git
 ```
 
-[![Star History Chart](https://api.star-history.com/svg?repos=icip-cas/PPTAgent&type=Date)](https://star-history.com/#icip-cas/PPTAgent&Date)
+Or install from source:
+
+```bash
+git clone https://github.com/zihanfu-code/PPTAgent.git
+cd PPTAgent
+pip install -e .
+```
+
+### Usage
+
+#### Via Web UI
+
+```bash
+cd pptagent_ui
+npm install
+npm run serve
+```
+
+Then start the backend:
+
+```bash
+python pptagent_ui/backend.py
+```
+
+#### Via Code
+
+```python
+from pptagent import PPTAgentAsync
+from pptagent.document import Document
+from pptagent.model_utils import ModelManager
+
+models = ModelManager()
+agent = PPTAgentAsync(
+    models.text_model,
+    models.language_model,
+    models.vision_model,
+)
+# See pptagent_ui/backend.py and test/test_pptgen.py for detailed examples
+```
+
+## Project Structure 📂
+
+```
+PPTAgent/
+├── pptagent/                     # Core Python package
+│   ├── agent.py                  # Agent and AsyncAgent framework
+│   ├── llms.py                   # LLM and AsyncLLM wrappers
+│   ├── apis.py                   # CodeExecutor and API functions
+│   ├── induct.py                 # Presentation analysis (Stage I)
+│   ├── pptgen.py                 # Presentation generation (Stage II)
+│   ├── ppteval.py                # PPTEval evaluation framework
+│   ├── model_utils.py            # Model management utilities
+│   ├── multimodal.py             # Multi-modal processing
+│   ├── prompts/                  # Prompt templates
+│   ├── roles/                    # Agent role definitions
+│   ├── document/                 # Document parsing and structuring
+│   └── presentation/             # PowerPoint file operations
+├── pptagent_ui/                  # Web UI
+│   ├── backend.py                # FastAPI backend server
+│   └── src/                      # Vue.js frontend
+├── test/                         # Test suite
+├── docker/                       # Docker configuration
+└── resource/                     # Images and templates
+```
+
+## Documentation 📝
+
+See [DOC.md](DOC.md) for detailed documentation on setup, usage, and configuration.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

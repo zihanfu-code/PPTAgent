@@ -20,7 +20,7 @@ pillow
 PyPDF2
 python-Levenshtein
 python-multipart
-python-pptx @ git+https://github.com/Force1ess/python-pptx
+python-pptx @ git+https://github.com/zihanfu-code/python-pptx
 rich
 socksio
 tenacity

@@ -46,7 +46,7 @@ from pptagent.utils import Config, get_logger, package_join, pjoin, ppt_to_image
 
 # constants
 DEBUG = True if len(sys.argv) == 1 else False
-RUNS_DIR = os.path.abspath('..') + "/runs" # /root/autodl-tmp/PPTAgent/runs
+RUNS_DIR = os.path.abspath('..') + "/runs"
 STAGES = [
     "PPT Parsing",
     "PDF Parsing",
@@ -199,7 +199,7 @@ async def feedback(request: Request):
     feedback = body.get("feedback")
     task_id = body.get("task_id")
 
-    with open(pjoin(RUNS_DIR, "feedback", f"{task_id}.txt"), "w") as f:
+    with open(pjoin(RUNS_DIR, "feedback", f"{task_id}.txt"), "w", encoding="utf-8") as f:
         f.write(feedback)
     return {"message": "Feedback submitted successfully"}
 
@@ -216,7 +216,7 @@ async def ppt_gen(task_id: str, rerun=False):
     if rerun:
         task_id = task_id.replace("|", "/")
         active_connections[task_id] = None
-        progress_store[task_id] = json.load(open(pjoin(RUNS_DIR, task_id, "task.json")))
+        progress_store[task_id] = json.load(open(pjoin(RUNS_DIR, task_id, "task.json"), encoding="utf-8"))
 
     # Wait for WebSocket connection
     for _ in range(100):
@@ -230,12 +230,12 @@ async def ppt_gen(task_id: str, rerun=False):
     task = progress_store.pop(task_id)
     pptx_md5 = task["pptx"] # 默认 default_template，如果上传ppt则为ppt的id
     pdf_md5 = task["pdf"] # 如果上传pdf则为pdf的id
-    generation_config = Config(pjoin(RUNS_DIR, task_id)) # /root/autodl-tmp/PPTAgent/runs/2025-05-13/4fecf64f-b74a-4cb4-aad4-676710960784/
-    pptx_config = Config(pjoin(RUNS_DIR, "pptx", pptx_md5)) # /root/autodl-tmp/PPTAgent/runs/pptx/pptx_md5
-    json.dump(task, open(pjoin(generation_config.RUN_DIR, "task.json"), "w"))
+    generation_config = Config(pjoin(RUNS_DIR, task_id))
+    pptx_config = Config(pjoin(RUNS_DIR, "pptx", pptx_md5))
+    json.dump(task, open(pjoin(generation_config.RUN_DIR, "task.json"), "w", encoding="utf-8"))
     progress = ProgressManager(task_id, STAGES)
-    parsedpdf_dir = pjoin(RUNS_DIR, "pdf", pdf_md5) # /root/autodl-tmp/PPTAgent/runs/pdf/pdf_md5
-    ppt_image_folder = pjoin(pptx_config.RUN_DIR, "slide_images") # /root/autodl-tmp/PPTAgent/runs/pptx/pptx_md5/slide_images
+    parsedpdf_dir = pjoin(RUNS_DIR, "pdf", pdf_md5)
+    ppt_image_folder = pjoin(pptx_config.RUN_DIR, "slide_images")
 
     await send_progress(
         active_connections[task_id], "task initialized successfully", 10
@@ -268,15 +268,25 @@ async def ppt_gen(task_id: str, rerun=False):
 
         labler = ImageLabler(presentation, pptx_config)
         if os.path.exists(pjoin(pptx_config.RUN_DIR, "image_stats.json")):
-            image_stats = json.load(
-                open(pjoin(pptx_config.RUN_DIR, "image_stats.json"))
-            )
-            labler.apply_stats(image_stats) 
+            try:
+                image_stats = json.load(
+                    open(pjoin(pptx_config.RUN_DIR, "image_stats.json"), encoding="utf-8")
+                )
+                labler.apply_stats(image_stats)
+            except (json.JSONDecodeError, UnicodeDecodeError):
+                os.remove(pjoin(pptx_config.RUN_DIR, "image_stats.json"))
+                await labler.caption_images_async(models.vision_model)
+                json.dump(
+                    labler.image_stats,
+                    open(pjoin(pptx_config.RUN_DIR, "image_stats.json"), "w", encoding="utf-8"),
+                    ensure_ascii=False,
+                    indent=4,
+                )
         else:
             await labler.caption_images_async(models.vision_model) # 为幻灯片中的图像生成标题
             json.dump(
                 labler.image_stats,
-                open(pjoin(pptx_config.RUN_DIR, "image_stats.json"), "w"),
+                open(pjoin(pptx_config.RUN_DIR, "image_stats.json"), "w", encoding="utf-8"),
                 ensure_ascii=False,
                 indent=4,
             )
@@ -290,11 +300,18 @@ async def ppt_gen(task_id: str, rerun=False):
                 models.marker_model,
             )
         else:
-            text_content = open(pjoin(parsedpdf_dir, "source.md")).read()
+            text_content = open(pjoin(parsedpdf_dir, "source.md"), encoding="utf-8").read()
         await progress.report_progress()
 
         # document refine
-        if not os.path.exists(pjoin(parsedpdf_dir, "refined_doc.json")):
+        refine_path = pjoin(parsedpdf_dir, "refined_doc.json")
+        if os.path.exists(refine_path):
+            try:
+                source_doc = json.load(open(refine_path, encoding="utf-8"))
+                source_doc = Document.from_dict(source_doc, parsedpdf_dir)
+            except (json.JSONDecodeError, UnicodeDecodeError):
+                os.remove(refine_path)
+        if not os.path.exists(refine_path):
             source_doc = await Document.from_markdown_async(
                 text_content,
                 models.language_model,
@@ -303,17 +320,20 @@ async def ppt_gen(task_id: str, rerun=False):
             )
             json.dump(
                 source_doc.to_dict(),
-                open(pjoin(parsedpdf_dir, "refined_doc.json"), "w"),
+                open(refine_path, "w", encoding="utf-8"),
                 ensure_ascii=False,
                 indent=4,
             )
-        else:
-            source_doc = json.load(open(pjoin(parsedpdf_dir, "refined_doc.json")))
-            source_doc = Document.from_dict(source_doc, parsedpdf_dir)
         await progress.report_progress()
 
         # Slide Induction
-        if not os.path.exists(pjoin(pptx_config.RUN_DIR, "slide_induction.json")):
+        slide_induction_path = pjoin(pptx_config.RUN_DIR, "slide_induction.json")
+        if os.path.exists(slide_induction_path):
+            try:
+                slide_induction = json.load(open(slide_induction_path, encoding="utf-8"))
+            except (json.JSONDecodeError, UnicodeDecodeError):
+                os.remove(slide_induction_path)
+        if not os.path.exists(slide_induction_path):
             deepcopy(presentation).save(
                 pjoin(pptx_config.RUN_DIR, "template.pptx"), layout_only=True
             )
@@ -334,13 +354,9 @@ async def ppt_gen(task_id: str, rerun=False):
             slide_induction = await slide_inducter.content_induct(layout_induction) # 从幻灯片中提取内容
             json.dump(
                 slide_induction,
-                open(pjoin(pptx_config.RUN_DIR, "slide_induction.json"), "w"),
+                open(slide_induction_path, "w", encoding="utf-8"),
                 ensure_ascii=False,
                 indent=4,
-            )
-        else:
-            slide_induction = json.load(
-                open(pjoin(pptx_config.RUN_DIR, "slide_induction.json"))
             )
         await progress.report_progress()
 

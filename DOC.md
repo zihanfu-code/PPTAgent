@@ -59,7 +59,7 @@ For a quick test, use the example in `runs/pdf(pptx)/*/source.pdf(pptx)` to save
       <td>Minimum 8GB RAM, recommended with CUDA or MPS support for faster presentation analysis.</td>
     </tr>
     <tr>
-      <td><b>Required dependencies:</b> Python 3.11+, LibreOffice, Chrome, poppler-utils (conda: poppler), NodeJS, and other system dependencies listed in our <a href="https://github.com/icip-cas/PPTAgent/blob/docker/pptagent.dockerfile">dockerfile</a>.</td>
+      <td><b>Required dependencies:</b> Python 3.11+, LibreOffice, Chrome, poppler-utils (conda: poppler), NodeJS, and other system dependencies listed in our <a href="https://github.com/zihanfu-code/PPTAgent/blob/docker/pptagent.dockerfile">dockerfile</a>.</td>
     </tr>
   </tbody>
 </table>
@@ -70,8 +70,8 @@ Some recommended templates are available in the [templates](resource/templates/)
 
 ```bash
 # use docker proxy if you are in China
-# docker pull dockerproxy.net/forceless/pptagent:latest
-docker pull forceless/pptagent:latest
+# docker pull dockerproxy.net/zihanfu-code/pptagent:latest
+docker pull zihanfu-code/pptagent:latest
 
 # mapping home directory to /root to allow caching of models
 docker run -dt --gpus all --ipc=host --name pptagent \
@@ -79,7 +79,7 @@ docker run -dt --gpus all --ipc=host --name pptagent \
   -p 9297:9297 \
   -p 8088:8088 \
   -v $HOME:/root \
-  forceless/pptagent
+  zihanfu-code/pptagent
 
 # set -e PULL=True to pull latest changes from the repository
 # append /bin/fish to override the default command
@@ -97,7 +97,7 @@ docker logs -f pptagent
 #### Installation Guide
 
 ```bash
-pip install git+https://github.com/icip-cas/PPTAgent.git
+pip install git+https://github.com/zihanfu-code/PPTAgent.git
 ```
 
 #### Usage
@@ -175,4 +175,4 @@ This project is actively maintained! We welcome:
 
 ### Experimental Reproduction 🧪
 
-See [experiment](https://github.com/icip-cas/PPTAgent/tree/experiment) branch for reproducing experiments and evaluation results.
+See [experiment](https://github.com/zihanfu-code/PPTAgent/tree/experiment) branch for reproducing experiments and evaluation results.

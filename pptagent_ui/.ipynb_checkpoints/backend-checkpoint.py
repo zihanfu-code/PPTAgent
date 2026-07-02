@@ -34,7 +34,7 @@ from pptagent.utils import Config, get_logger, package_join, pjoin, ppt_to_image
 
 # constants
 DEBUG = True if len(sys.argv) == 1 else False
-RUNS_DIR = os.path.abspath('..') + "/runs" # /root/autodl-tmp/PPTAgent/runs
+RUNS_DIR = os.path.abspath('..') + "/runs"
 STAGES = [
     "PPT Parsing",
     "PDF Parsing",
@@ -218,12 +218,12 @@ async def ppt_gen(task_id: str, rerun=False):
     task = progress_store.pop(task_id)
     pptx_md5 = task["pptx"] # 默认 default_template，如果上传ppt则为ppt的id
     pdf_md5 = task["pdf"] # 如果上传pdf则为pdf的id
-    generation_config = Config(pjoin(RUNS_DIR, task_id)) # /root/autodl-tmp/PPTAgent/runs/2025-05-13/4fecf64f-b74a-4cb4-aad4-676710960784/
-    pptx_config = Config(pjoin(RUNS_DIR, "pptx", pptx_md5)) # /root/autodl-tmp/PPTAgent/runs/pptx/pptx_md5
+    generation_config = Config(pjoin(RUNS_DIR, task_id))
+    pptx_config = Config(pjoin(RUNS_DIR, "pptx", pptx_md5))
     json.dump(task, open(pjoin(generation_config.RUN_DIR, "task.json"), "w"))
     progress = ProgressManager(task_id, STAGES)
-    parsedpdf_dir = pjoin(RUNS_DIR, "pdf", pdf_md5) # /root/autodl-tmp/PPTAgent/runs/pdf/pdf_md5
-    ppt_image_folder = pjoin(pptx_config.RUN_DIR, "slide_images") # /root/autodl-tmp/PPTAgent/runs/pptx/pptx_md5/slide_images
+    parsedpdf_dir = pjoin(RUNS_DIR, "pdf", pdf_md5)
+    ppt_image_folder = pjoin(pptx_config.RUN_DIR, "slide_images")
 
     await send_progress(
         active_connections[task_id], "task initialized successfully", 10
