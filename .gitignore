@@ -16,6 +16,12 @@ node_modules
 human_eval
 resource/exemplars
 
+# HuggingFace model cache
+.cache/
+
+# Yarn PnP (regenerate with `yarn install`)
+.pnp.*
+
 # Copy from vuejs
 
 # Logs
