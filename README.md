@@ -5,59 +5,26 @@ PPTAgent is an innovative system that automatically generates presentations from
 > [!TIP]
 > 🚀 Get started quickly with our pre-built Docker image - [See Docker instructions](DOC.md/#docker-)
 
+## Project Background
+
+Mainstream document-to-PPT tools on the market generally suffer from content redundancy, monotonous visuals, and rigid structures. In particular, they are unable to automatically reproduce images and tables from the source document, making them inadequate for high-quality presentation needs in real-world office and academic scenarios.
+
+## Solution
+
+- **Reference-driven editing-based generation framework**: Models slide generation as a batch of insert, delete, and update operations (function call API sequences) on reference PPTs, supporting automatic editing and self-correction of text, images, and other multi-type elements. This significantly improves content structure, visual style adaptability, and system robustness.
+- **Automatic visual layout grouping via ViT + hierarchical clustering**: Extracts slide image embeddings using a ViT model, groups visual layouts through hierarchical clustering, and leverages GPT-4o to extract structured content schemas for each layout category, enabling efficient style transfer.
+- **HTML-based slide parsing and editing environment**: Converts raw XML slide structures into HTML, substantially reducing the difficulty for GPT-4o to understand and manipulate page layouts.
+- **Multi-dimensional automatic evaluation framework**: Integrates content richness, design aesthetics, and structural coherence into an automatic scoring system, achieving a correlation of over 0.7 with human evaluation scores.
+
+## Project Results
+
+Tested on Zenodo10K and other multi-domain public datasets, the system achieves an average improvement of 13%–29% over template-based and rule-based baselines across content, design, and coherence metrics, with structural coherence scores improving by over 25%. The final average score reaches **3.67/5**.
+
 ## Distinctive Features ✨
 
 - **Dynamic Content Generation**: Creates slides with seamlessly integrated text and images
 - **Smart Reference Learning**: Leverages existing presentations without requiring manual annotation
 - **Comprehensive Quality Assessment**: Evaluates presentations through multiple quality metrics
-
-## Case Study 💡
-
-- #### [Iphone 16 Pro](https://www.apple.com/iphone-16-pro/)
-
-<div style="display: flex; flex-wrap: wrap; gap: 10px;">
-
-  <img src="resource/iphone16pro/0001.jpg" alt="图片1" width="200"/>
-
-  <img src="resource/iphone16pro/0002.jpg" alt="图片2" width="200"/>
-
-  <img src="resource/iphone16pro/0003.jpg" alt="图片3" width="200"/>
-
-  <img src="resource/iphone16pro/0004.jpg" alt="图片4" width="200"/>
-
-  <img src="resource/iphone16pro/0005.jpg" alt="图片5" width="200"/>
-
-  <img src="resource/iphone16pro/0006.jpg" alt="图片6" width="200"/>
-
-  <img src="resource/iphone16pro/0007.jpg" alt="图片7" width="200"/>
-
-</div>
-
-- #### [Build Effective Agents](https://www.anthropic.com/research/building-effective-agents)
-
-<div style="display: flex; flex-wrap: wrap; gap: 10px;">
-
-  <img src="resource/build_effective_agents/0001.jpg" alt="图片1" width="200"/>
-
-  <img src="resource/build_effective_agents/0002.jpg" alt="图片2" width="200"/>
-
-  <img src="resource/build_effective_agents/0003.jpg" alt="图片3" width="200"/>
-
-  <img src="resource/build_effective_agents/0004.jpg" alt="图片4" width="200"/>
-
-  <img src="resource/build_effective_agents/0005.jpg" alt="图片5" width="200"/>
-
-  <img src="resource/build_effective_agents/0006.jpg" alt="图片6" width="200"/>
-
-  <img src="resource/build_effective_agents/0007.jpg" alt="图片7" width="200"/>
-
-  <img src="resource/build_effective_agents/0008.jpg" alt="图片8" width="200"/>
-
-<img src="resource/build_effective_agents/0009.jpg" alt="图片9" width="200"/>
-
-<img src="resource/build_effective_agents/0010.jpg" alt="图片10" width="200"/>
-
-</div>
 
 ## PPTAgent 🤖
 
@@ -65,22 +32,12 @@ PPTAgent follows a two-phase approach:
 1. **Analysis Phase**: Extracts and learns from patterns in reference presentations
 2. **Generation Phase**: Develops structured outlines and produces visually cohesive slides
 
-Our system's workflow is illustrated below:
-
-
-![PPTAgent Workflow](resource/fig2.jpg)
-
 ## PPTEval ⚖️
 
 PPTEval evaluates presentations across three dimensions:
 - **Content**: Check the accuracy and relevance of the slides.
 - **Design**: Assesses the visual appeal and consistency.
 - **Coherence**: Ensures the logical flow of ideas.
-
-The workflow of PPTEval is shown below:
-<p align="center">
-<img src="resource/fig3.jpg" alt="PPTEval Workflow" style="width:70%;"/>
-</p>
 
 ## Quick Start 🚀
 
